@@ -4,6 +4,26 @@ require_once "functions/getPeriods.php";
 require_once "functions/getPrograms.php";
 require_once "functions/getSchedule.php";
 
+$neededDirs = array(
+  'static',
+  'static/perioder',
+  'static/program',
+);
+
+foreach ($neededDirs as $dir)
+{
+  if (!is_dir($dir))
+  {
+    echo "Creating dir \"$dir\"... ";
+    if (mkdir($dir))
+      echo "OK!";
+    else
+      echo "FAILED!";
+      
+    echo "\n";
+  }
+}
+
 /*
  * Update perioder.html
  */
