@@ -5,6 +5,8 @@ require_once "config.php";
 function getPeriods()
 {
   $domDoc = file_get_html("static/perioder.html");
+  
+  $checkedLinks = array();
     
   $artContent = $domDoc->find("div.article-content", 0);
   $td = $artContent->find("table tbody td", 0);
@@ -17,13 +19,22 @@ function getPeriods()
   $i=1;
   foreach ($content->find('a') as $period)
   {
+    if (strcmp($period->innertext, "") == 0 || strcmp($period->innertext, "...") == 0)
+      continue;
+      
   	$curPeriod = array(
   		'text' => $period->innertext,
   		'link' => $config['urlPrefix'].$period->href,
   		'pId' => "P$i"
   	);
-  	array_push($periods, $curPeriod);
-  	$i++;
+  	
+  	if (!in_array($curPeriod['link'], $checkedLinks)) {
+  	  array_push($periods, $curPeriod);
+  	  array_push($checkedLinks, $curPeriod['link']);
+    	$i++;
+	  } else {
+	    echo "Skipping ".$curPeriod['link']." ...\n";
+    }
   }
   return $periods;
 }

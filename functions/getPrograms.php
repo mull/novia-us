@@ -12,8 +12,9 @@ require_once "config.php";
  */
 function getPrograms($periodId)
 {
-  //$periodsUrl = $config["programUrl"];
-  //$periodsUrl = str_replace("[PERIOD]", $periodId, $periodsUrl);
+  echo "$periodId \n";
+//  $periodsUrl = $config["programUrl"];
+//  $periodsUrl = str_replace("[PERIOD]", $periodId, $periodsUrl);
   $fileName = "static/perioder/$periodId.html";
   if (!file_exists($fileName))
     die(">:(");

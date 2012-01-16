@@ -18,6 +18,7 @@ if ($ret === FALSE)
 }
 
 
+echo "Getting periods...\n";
 /*
  * Get periods from static/perioder.html
  */
@@ -28,7 +29,7 @@ foreach ($periods as $period)
   $periodId = $period['pId'];
   
   echo "Fetching $realUrl ...";
-  
+
   $periodStr = file_get_contents($realUrl);
   if ($periodStr === false)
   {
@@ -48,41 +49,52 @@ foreach ($periods as $period)
   }
 }
 
+echo "Getting periods done.\n";
+
 /*
- * Get each program's schedule for the LAST PERIOD ONLY!
+ * Get each program's schedule for the LAST TWO PERIODS ONLY!
  * Otherwise this script will take forever :]
  * static/program/[PERIODID]_[PROGRAMIDENT].html
  */
 
-$period = $periods[count($periods)-1];
-$periodId = $period['pId'];
-$programs = getPrograms($periodId);
+echo "Getting program schedules...\n";
 
-foreach ($programs as $program)
+$periodIndex = count($periods)-2;
+for (; $periodIndex < count($periods); $periodIndex++)
 {
-  foreach ($program['years'] as $year)
+  $period = $periods[$periodIndex];
+  $periodId = $period['pId'];
+
+  $programs = getPrograms($periodId);
+
+  foreach ($programs as $program)
   {
-    $realUrl = $config['urlPrefix'].$year['href'];
-    $programId = $year['programId'];
-    
-    echo "Fetching $realUrl...";
-    $yearStr = file_get_contents($realUrl);
-    if ($yearStr === false)
+    foreach ($program['years'] as $year)
     {
-      echo "\nGetting schedule for $programId ($realUrl) failed!";
-      exit(1);
-    } else {
-      echo " OK!\n";
-    }
+      $realUrl = $config['urlPrefix'].$year['href'];
+      $programId = $year['programId'];
     
-    $fileName = "static/program/".$periodId."_".$programId.".html";
-    $ret = file_put_contents($fileName, $yearStr);
-    if ($ret === false)
-    {
-      echo "Writing schedule for $programId ($realUrl) failed!";
-      exit(1);
+      echo "Fetching $realUrl...";
+      $yearStr = file_get_contents($realUrl);
+      if ($yearStr === false)
+      {
+        echo "\nGetting schedule for $programId ($realUrl) failed!";
+        exit(1);
+      } else {
+        echo " OK!\n";
+      }
+    
+      $fileName = "static/program/".$periodId."_".$programId.".html";
+      $ret = file_put_contents($fileName, $yearStr);
+      if ($ret === false)
+      {
+        echo "Writing schedule for $programId ($realUrl) failed!";
+        exit(1);
+      }
     }
   }
 }
+
+echo "Getting program schedules finished.\n";
 
 ?>

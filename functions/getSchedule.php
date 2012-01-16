@@ -6,9 +6,10 @@ function getSchedule($periodId, $programId)
 {
   global $config;
   global $debug;
-  /*$scheduleUrl = $config['scheduleUrl'];
+
+  $scheduleUrl = $config['scheduleUrl'];
   $scheduleUrl = str_replace("[PERIOD]", $periodId, $scheduleUrl);
-  $scheduleUrl = str_replace("[PROGRAM]", $programId, $scheduleUrl);*/
+  $scheduleUrl = str_replace("[PROGRAM]", $programId, $scheduleUrl);
 
   //$domDoc = file_get_html("static/it2.html");
   //$domDoc = file_get_html($scheduleUrl);
@@ -16,6 +17,7 @@ function getSchedule($periodId, $programId)
   if (!file_exists($fileName))
     die(">:(");
   $domDoc = file_get_html($fileName);
+
   $masterTable = $domDoc->find('table tbody', 0);
 
   // 1 array for each day
@@ -143,11 +145,11 @@ function getSchedule($periodId, $programId)
   return $lectures;
 }
 
-if ($debug)
+/*if ($debug)
 {
-  $periodId = "P1";
+  $periodId = "P4";
   $programId = "IT1S";
   
   getSchedule($periodId, $programId);
-}
+}*/
 ?>
